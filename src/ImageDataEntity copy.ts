@@ -48,7 +48,7 @@ export class ImageDataEntity extends g.E {
 
     ctx.resetTransform();
 
-    this.context.putImageData(this.imageData, 0, 0);
+    // this.context.putImageData(this.imageData, 0, 0);
 
     ctx.scale(this.pixelScale, this.pixelScale);
     ctx.drawImage(this.canvas, this.x / this.pixelScale, this.y / this.pixelScale);

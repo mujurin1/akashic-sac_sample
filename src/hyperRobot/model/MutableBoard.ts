@@ -1,38 +1,41 @@
+import { Dir } from "../type";
 import { Cell } from "./Cell";
-import { Goal } from "./Goal";
+import { Mark } from "./Mark";
 
-export type Dir = "top" | "bottom" | "left" | "right";
-
-export type GoalCell = { x: number; y: number; type: Goal };
-export type WallCell = { x: number; y: number; dir: Dir };
+type MarkedCell = { x: number; y: number; mark: Mark };
+type WallCell = { x: number; y: number; dir: Dir };
 
 export class MutableBoard {
-  private readonly goals: GoalCell[] = [];
+  private readonly markedCells: MarkedCell[] = [];
   private readonly walls: WallCell[] = [];
 
-  getGoals(): readonly GoalCell[] {
-    return this.goals;
+  getMarkedCells(): readonly MarkedCell[] {
+    return this.markedCells;
   }
 
   getCell(x: number, y: number): Cell {
     const walls = this.walls.filter(wall => wall.x === x && wall.y === y);
-    const goal = this.goals.find(goal => goal.x === x && goal.y === y);
+    const mark = this.markedCells.find(goal => goal.x === x && goal.y === y);
 
     return {
-      isLeftWall: walls.some(wall => wall.dir === "left"),
-      isTopWall: walls.some(wall => wall.dir === "top"),
-      isRightWall: walls.some(wall => wall.dir === "right"),
-      isBottomWall: walls.some(wall => wall.dir === "bottom"),
-      goal: goal?.type ?? undefined
+      x,
+      y,
+      walls: {
+        top: walls.some(wall => wall.dir === "top"),
+        right: walls.some(wall => wall.dir === "right"),
+        bottom: walls.some(wall => wall.dir === "bottom"),
+        left: walls.some(wall => wall.dir === "left")
+      },
+      mark: mark?.mark
     };
   }
 
-  addGoal(x: number, y: number, type: Goal): void {
-    this.goals.push({ x, y, type });
+  setMark(x: number, y: number, mark: Mark): void {
+    this.markedCells.push({ x, y, mark });
   }
 
-  addGoalAndWall(x: number, y: number, type: Goal, wallDir: readonly [Dir, Dir]): void {
-    this.goals.push({ x, y, type });
+  addMarkAndWall(x: number, y: number, mark: Mark, wallDir: readonly [Dir, Dir]): void {
+    this.setMark(x, y, mark);
 
     this.addWall(x, y, wallDir[0]);
     this.addWall(x, y, wallDir[1]);
@@ -71,9 +74,9 @@ export class MutableBoard {
       newBoard.walls.push({ x, y, dir: rotateDir(wall.dir) });
     });
 
-    this.goals.forEach(goal => {
-      const { x, y } = rotateXY(goal.x, goal.y, cx, cy);
-      newBoard.goals.push({ x, y, type: goal.type });
+    this.markedCells.forEach(mark => {
+      const { x, y } = rotateXY(mark.x, mark.y, cx, cy);
+      newBoard.markedCells.push({ x, y, mark: mark.mark });
     });
 
     return newBoard;
@@ -85,7 +88,7 @@ export class MutableBoard {
    */
   merge(board: MutableBoard): void {
     this.walls.push(...board.walls);
-    this.goals.push(...board.goals);
+    this.markedCells.push(...board.markedCells);
   }
 }
 

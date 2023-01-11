@@ -1,5 +1,7 @@
 import { PlayerManager } from "../model/PlayerManager";
+import * as frameAssets from "./frameAssets";
 
-export * as frameAssets from "./frameAssets";
-// export * from "./playerManager";
-export const playerManager = PlayerManager.create();
+export const global = {
+  frameAssets,
+  playerManager: PlayerManager.create()
+} as const;

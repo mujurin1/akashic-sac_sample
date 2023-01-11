@@ -3,7 +3,7 @@ import { resolvePlayerInfo } from "@akashic-extension/resolve-player-info";
 import { createFont, createFrameLabel, SwitchChapter } from "akashic-sac";
 import { Chapter } from "akashic-sac/lib/Chapter";
 import { JoinPlayer } from "../actions/JoinPlayer";
-import * as global from "../global/global";
+import { global } from "../global/global";
 import { Game_X } from "./Game/Game_X";
 import { ChangeColor } from "./TitleActions";
 
@@ -18,6 +18,8 @@ export class Title extends Chapter {
   private lastJoinedPlayer: Label;
 
   init(): void {
+    const client = g.game.env.client!;
+
     //#region ビューの初期化
     this.colorRect = g.game.env.createEntity(g.FilledRect, {
       parent: this.display,
@@ -59,7 +61,7 @@ export class Title extends Chapter {
 
     this.joinButton.onPointDown.add(() => {
       resolvePlayerInfo({}, (err, playerInfo) => {
-        this.client.sendAction(new JoinPlayer(playerInfo?.name ?? "No-Name"));
+        client.sendAction(new JoinPlayer(playerInfo?.name ?? "No-Name"));
       });
       this.joinButton.remove();
     });
@@ -67,16 +69,16 @@ export class Title extends Chapter {
     //#region 生主のみ
     if (g.game.env.isHost) {
       this.colorRect.onPointDown.add(() => {
-        this.client.sendAction(new ChangeColor(rndomColor()));
+        client.sendAction(new ChangeColor(rndomColor()));
       });
       this.nextButton.onPointDown.add(() => {
-        this.client.sendAction(SwitchChapter.create(Game_X));
+        client.sendAction(SwitchChapter.create(Game_X));
       });
     }
     //#endregion
 
     //#region アクションの初期化
-    this.actionSets.push(
+    this.addActionSet(
       ChangeColor.createActionSet(data => {
         this.colorRect.cssColor = data.color;
         this.colorRect.modified();

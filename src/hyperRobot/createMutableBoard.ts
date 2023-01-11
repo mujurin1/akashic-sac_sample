@@ -1,4 +1,5 @@
-import { Goal } from "./model/Goal";
+import { randomInt, shuffleArray } from "../utils/funcs";
+import { Mark, StandardMarks, WildMark } from "./model/Mark";
 import { MutableBoard } from "./model/MutableBoard";
 import { aroundIsNotGoal } from "./mutableBoardCheck";
 import { Point } from "./type";
@@ -12,12 +13,11 @@ export const createMutableBoard = (): MutableBoard => {
   const mutableBoard = new MutableBoard();
 
   for (const angle of [0, 90, 180, 270] as const) {
-    const boardId = angle / 90;
     const board = cerateMutableBoardPiece([
-      Goal.nomals[boardId * 4],
-      Goal.nomals[boardId * 4 + 1],
-      Goal.nomals[boardId * 4 + 2],
-      Goal.nomals[boardId * 4 + 3]
+      StandardMarks.circle[0],
+      StandardMarks.square[1],
+      StandardMarks.triangle[2],
+      StandardMarks.star[3]
     ]).rotate(angle, boardPieceWidth, boardPieceHeight);
     mutableBoard.merge(board);
   }
@@ -48,7 +48,7 @@ const addWildGoal = (board: MutableBoard): void => {
     point = goalPoints[pointIndex];
   }
 
-  board.addGoal(point.x, point.y, Goal.wild);
+  board.setMark(point.x, point.y, WildMark);
 
   board.addWall(point.x, point.y, point.x < boardPieceWidth ? "right" : "left");
   board.addWall(point.x, point.y, point.y < boardPieceHeight ? "bottom" : "top");
@@ -56,10 +56,11 @@ const addWildGoal = (board: MutableBoard): void => {
 
 /**
  * ボードの左上相当の一片を作成して返す
- * @param goals ボードに配置する４つのゴール
+ * @param marks ボードのセルに配置するマークの配列
  */
-const cerateMutableBoardPiece = (goals: readonly [Goal, Goal, Goal, Goal]): MutableBoard => {
-  const shuffledGoalds = shuffleArray(goals);
+const cerateMutableBoardPiece = (marks: readonly [Mark, Mark, Mark, Mark]): MutableBoard => {
+  // marks = shuffleArray(marks);
+
   const mutableBoard = new MutableBoard();
 
   // 左・上のボード端の壁を配置
@@ -77,32 +78,23 @@ const cerateMutableBoardPiece = (goals: readonly [Goal, Goal, Goal, Goal]): Muta
   // ゴールとゴール壁を配置
   const goalPoints = generateGoalPoints();
 
-  mutableBoard.addGoalAndWall(goalPoints[0].x, goalPoints[0].y, shuffledGoalds[0], [
-    "top",
-    "right"
-  ]);
-  mutableBoard.addGoalAndWall(goalPoints[1].x, goalPoints[1].y, shuffledGoalds[1], [
-    "right",
-    "bottom"
-  ]);
-  mutableBoard.addGoalAndWall(goalPoints[2].x, goalPoints[2].y, shuffledGoalds[2], [
-    "bottom",
-    "left"
-  ]);
-  mutableBoard.addGoalAndWall(goalPoints[3].x, goalPoints[3].y, shuffledGoalds[3], ["left", "top"]);
+  mutableBoard.addMarkAndWall(goalPoints[0].x, goalPoints[0].y, marks[0], ["top", "right"]);
+  mutableBoard.addMarkAndWall(goalPoints[1].x, goalPoints[1].y, marks[1], ["right", "bottom"]);
+  mutableBoard.addMarkAndWall(goalPoints[2].x, goalPoints[2].y, marks[2], ["bottom", "left"]);
+  mutableBoard.addMarkAndWall(goalPoints[3].x, goalPoints[3].y, marks[3], ["left", "top"]);
 
   // 左・上から生える壁を配置
   const addWallX = shuffleArray([1, 2, 3, 4, 5, 6]).filter(x => {
     const bottomCell = mutableBoard.getCell(x, 1);
     const rightBottomCell = mutableBoard.getCell(x + 1, 1);
-    return !bottomCell.isTopWall && !bottomCell.isRightWall && !rightBottomCell.isTopWall;
+    return !bottomCell.walls["top"] && !bottomCell.walls["right"] && !rightBottomCell.walls["top"];
   })[0];
   mutableBoard.addWall(addWallX, 0, "right");
 
   const addWallY = shuffleArray([1, 2, 3, 4, 5, 6]).filter(y => {
     const rightCell = mutableBoard.getCell(1, y);
     const rightBottomCell = mutableBoard.getCell(1, y + 1);
-    return !rightCell.isLeftWall && !rightCell.isBottomWall && !rightBottomCell.isLeftWall;
+    return !rightCell.walls["left"] && !rightCell.walls["bottom"] && !rightBottomCell.walls["left"];
   })[0];
   mutableBoard.addWall(0, addWallY, "bottom");
 
@@ -149,23 +141,3 @@ const generateGoalPoints = (): [Point, Point, Point, Point] => {
 
   return result as [Point, Point, Point, Point];
 };
-
-/**
- * 中身をシャッフルした新しい配列を返す
- * @param array
- */
-const shuffleArray = <T>(array: readonly T[]): T[] => {
-  const ary = array.slice();
-
-  for (let i = ary.length - 1; i >= 0; i--) {
-    const j = randomInt(i + 1);
-    [ary[i], ary[j]] = [ary[j], ary[i]];
-  }
-
-  return ary;
-};
-
-/**
- * 0以上max未満の整数の乱数を返す
- */
-const randomInt = (max: number): number => Math.floor(g.game.random.generate() * max);

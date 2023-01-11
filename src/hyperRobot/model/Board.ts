@@ -1,7 +1,11 @@
 import { Cell } from "./Cell";
+import { Mark } from "./Mark";
 
 export interface Board {
   readonly width: number;
   readonly height: number;
-  readonly cells: readonly (readonly Cell[])[];
+
+  getCell(x: number, y: number): Cell;
+
+  getMarkedCell(mark: Mark): Cell;
 }

@@ -119,19 +119,9 @@
 			"path": "script/global/global.js",
 			"global": true
 		},
-		"ImageDataEntity": {
-			"type": "script",
-			"path": "script/ImageDataEntity.js",
-			"global": true
-		},
 		"Game_X": {
 			"type": "script",
 			"path": "script/chapters/Game/Game_X.js",
-			"global": true
-		},
-		"HyperRobot": {
-			"type": "script",
-			"path": "script/hyperRobot/HyperRobot.js",
 			"global": true
 		},
 		"Board": {
@@ -142,11 +132,6 @@
 		"Cell": {
 			"type": "script",
 			"path": "script/hyperRobot/model/Cell.js",
-			"global": true
-		},
-		"Goal": {
-			"type": "script",
-			"path": "script/hyperRobot/model/Goal.js",
 			"global": true
 		},
 		"Piece": {
@@ -177,6 +162,81 @@
 		"visualizeBoard": {
 			"type": "script",
 			"path": "script/hyperRobot/visualizeBoard.js",
+			"global": true
+		},
+		"createBoard": {
+			"type": "script",
+			"path": "script/hyperRobot/createBoard.js",
+			"global": true
+		},
+		"HyperRobotView": {
+			"type": "script",
+			"path": "script/hyperRobot/views/HyperRobotView.js",
+			"global": true
+		},
+		"CanvasEntity": {
+			"type": "script",
+			"path": "script/CanvasEntity.js",
+			"global": true
+		},
+		"ImageDataEntity copy": {
+			"type": "script",
+			"path": "script/ImageDataEntity copy.js",
+			"global": true
+		},
+		"constNormal": {
+			"type": "script",
+			"path": "script/hyperRobot/views/normal/constNormal.js",
+			"global": true
+		},
+		"nomralView": {
+			"type": "script",
+			"path": "script/hyperRobot/views/normal/nomralView.js",
+			"global": true
+		},
+		"nomalBoardDrawer": {
+			"type": "script",
+			"path": "script/hyperRobot/views/normal/nomalBoardDrawer.js",
+			"global": true
+		},
+		"Mark": {
+			"type": "script",
+			"path": "script/hyperRobot/model/Mark.js",
+			"global": true
+		},
+		"funcs": {
+			"type": "script",
+			"path": "script/utils/funcs.js",
+			"global": true
+		},
+		"Trigger": {
+			"type": "script",
+			"path": "script/utils/Trigger.js",
+			"global": true
+		},
+		"createHyperRobot": {
+			"type": "script",
+			"path": "script/hyperRobot/createHyperRobot.js",
+			"global": true
+		},
+		"HRU": {
+			"type": "script",
+			"path": "script/hyperRobot/hyperRobotUpdate/HRU.js",
+			"global": true
+		},
+		"HRU_MovePiece": {
+			"type": "script",
+			"path": "script/hyperRobot/hyperRobotUpdate/HRU_MovePiece.js",
+			"global": true
+		},
+		"HyperRobot": {
+			"type": "script",
+			"path": "script/hyperRobot/model/HyperRobot.js",
+			"global": true
+		},
+		"HRU_Goal": {
+			"type": "script",
+			"path": "script/hyperRobot/hyperRobotUpdate/HRU_Goal.js",
 			"global": true
 		}
 	}

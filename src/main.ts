@@ -2,8 +2,8 @@ import { initializedStart, InitializedStartOption } from "akashic-sac/lib/index"
 import { Title } from "./chapters/title";
 import { serverStart } from "./server/server";
 import { JoinPlayer } from "./actions/JoinPlayer";
-import * as global from "./global/global";
 import { Game_X } from "./chapters/Game/Game_X";
+import { global } from "./global/global";
 
 function main(param: g.GameMainParameterObject): void {
   const options: InitializedStartOption = {
