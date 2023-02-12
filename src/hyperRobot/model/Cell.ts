@@ -1,11 +1,12 @@
-import { Dir } from "../type";
+import { DirRecord } from "../type";
 import { Mark } from "./Mark";
 
 export interface Cell {
   readonly x: number;
   readonly y: number;
 
-  readonly walls: Readonly<Record<Dir, boolean>>;
+  /** { [dir]: 壁が存在するか } */
+  readonly walls: DirRecord;
 
   readonly mark: Mark | undefined;
 }

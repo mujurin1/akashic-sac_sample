@@ -58,14 +58,30 @@
 		"node_modules/box2dweb/box2d.js"
 	],
 	"assets": {
-		"main": {
+		"default_frame": {
+			"type": "image",
+			"path": "image/default_frame.png",
+			"width": 31,
+			"height": 31
+		},
+		"JoinPlayer": {
 			"type": "script",
-			"path": "script/main.js",
+			"path": "script/actions/JoinPlayer.js",
 			"global": true
 		},
-		"tests": {
+		"CanvasDrawer": {
 			"type": "script",
-			"path": "script/tests.js",
+			"path": "script/CanvasDrawer.js",
+			"global": true
+		},
+		"CanvasEntity copy": {
+			"type": "script",
+			"path": "script/CanvasEntity copy.js",
+			"global": true
+		},
+		"Game_X": {
+			"type": "script",
+			"path": "script/chapters/Game/Game_X.js",
 			"global": true
 		},
 		"title": {
@@ -78,40 +94,9 @@
 			"path": "script/chapters/TitleActions.js",
 			"global": true
 		},
-		"default_frame": {
-			"type": "image",
-			"path": "image/default_frame.png",
-			"width": 31,
-			"height": 31
-		},
-		"server": {
-			"type": "script",
-			"path": "script/server/server.js",
-			"global": true
-		},
-		"JoinPlayer": {
-			"type": "script",
-			"path": "script/actions/JoinPlayer.js",
-			"global": true
-		},
-		"Player": {
-			"type": "script",
-			"path": "script/model/Player.js",
-			"global": true
-		},
 		"frameAssets": {
 			"type": "script",
 			"path": "script/global/frameAssets.js",
-			"global": true
-		},
-		"playerManager": {
-			"type": "script",
-			"path": "script/global/playerManager.js",
-			"global": true
-		},
-		"PlayerManager": {
-			"type": "script",
-			"path": "script/model/PlayerManager.js",
 			"global": true
 		},
 		"global": {
@@ -119,19 +104,19 @@
 			"path": "script/global/global.js",
 			"global": true
 		},
-		"Game_X": {
+		"playerManager": {
 			"type": "script",
-			"path": "script/chapters/Game/Game_X.js",
-			"global": true
-		},
-		"Board": {
-			"type": "script",
-			"path": "script/hyperRobot/model/Board.js",
+			"path": "script/global/playerManager.js",
 			"global": true
 		},
 		"Cell": {
 			"type": "script",
 			"path": "script/hyperRobot/model/Cell.js",
+			"global": true
+		},
+		"Mark": {
+			"type": "script",
+			"path": "script/hyperRobot/model/Mark.js",
 			"global": true
 		},
 		"Piece": {
@@ -144,29 +129,9 @@
 			"path": "script/hyperRobot/type.js",
 			"global": true
 		},
-		"MutableBoard": {
+		"defaultView": {
 			"type": "script",
-			"path": "script/hyperRobot/model/MutableBoard.js",
-			"global": true
-		},
-		"createMutableBoard": {
-			"type": "script",
-			"path": "script/hyperRobot/createMutableBoard.js",
-			"global": true
-		},
-		"mutableBoardCheck": {
-			"type": "script",
-			"path": "script/hyperRobot/mutableBoardCheck.js",
-			"global": true
-		},
-		"visualizeBoard": {
-			"type": "script",
-			"path": "script/hyperRobot/visualizeBoard.js",
-			"global": true
-		},
-		"createBoard": {
-			"type": "script",
-			"path": "script/hyperRobot/createBoard.js",
+			"path": "script/hyperRobot/views/defaultView.js",
 			"global": true
 		},
 		"HyperRobotView": {
@@ -174,24 +139,9 @@
 			"path": "script/hyperRobot/views/HyperRobotView.js",
 			"global": true
 		},
-		"CanvasEntity": {
-			"type": "script",
-			"path": "script/CanvasEntity.js",
-			"global": true
-		},
-		"ImageDataEntity copy": {
-			"type": "script",
-			"path": "script/ImageDataEntity copy.js",
-			"global": true
-		},
 		"constNormal": {
 			"type": "script",
 			"path": "script/hyperRobot/views/normal/constNormal.js",
-			"global": true
-		},
-		"nomralView": {
-			"type": "script",
-			"path": "script/hyperRobot/views/normal/nomralView.js",
 			"global": true
 		},
 		"nomalBoardDrawer": {
@@ -199,9 +149,39 @@
 			"path": "script/hyperRobot/views/normal/nomalBoardDrawer.js",
 			"global": true
 		},
-		"Mark": {
+		"nomralView": {
 			"type": "script",
-			"path": "script/hyperRobot/model/Mark.js",
+			"path": "script/hyperRobot/views/normal/nomralView.js",
+			"global": true
+		},
+		"ImageDataEntity copy": {
+			"type": "script",
+			"path": "script/ImageDataEntity copy.js",
+			"global": true
+		},
+		"main": {
+			"type": "script",
+			"path": "script/main.js",
+			"global": true
+		},
+		"Player": {
+			"type": "script",
+			"path": "script/model/Player.js",
+			"global": true
+		},
+		"PlayerManager": {
+			"type": "script",
+			"path": "script/model/PlayerManager.js",
+			"global": true
+		},
+		"server": {
+			"type": "script",
+			"path": "script/server/server.js",
+			"global": true
+		},
+		"tests": {
+			"type": "script",
+			"path": "script/tests.js",
 			"global": true
 		},
 		"funcs": {
@@ -209,34 +189,144 @@
 			"path": "script/utils/funcs.js",
 			"global": true
 		},
+		"randomInt": {
+			"type": "script",
+			"path": "script/utils/randomInt.js",
+			"global": true
+		},
 		"Trigger": {
 			"type": "script",
 			"path": "script/utils/Trigger.js",
 			"global": true
 		},
-		"createHyperRobot": {
+		"const": {
 			"type": "script",
-			"path": "script/hyperRobot/createHyperRobot.js",
+			"path": "script/hyperRobot/const.js",
 			"global": true
 		},
-		"HRU": {
+		"CellContainer": {
 			"type": "script",
-			"path": "script/hyperRobot/hyperRobotUpdate/HRU.js",
+			"path": "script/hyperRobot/impl/CellContainer.js",
 			"global": true
 		},
-		"HRU_MovePiece": {
+		"createRuledCellArray": {
 			"type": "script",
-			"path": "script/hyperRobot/hyperRobotUpdate/HRU_MovePiece.js",
+			"path": "script/hyperRobot/impl/createRuledCellArray.js",
 			"global": true
 		},
-		"HyperRobot": {
+		"createRuledPieces": {
 			"type": "script",
-			"path": "script/hyperRobot/model/HyperRobot.js",
+			"path": "script/hyperRobot/impl/createRuledPieces.js",
 			"global": true
 		},
-		"HRU_Goal": {
+		"HyperRobotState": {
 			"type": "script",
-			"path": "script/hyperRobot/hyperRobotUpdate/HRU_Goal.js",
+			"path": "script/hyperRobot/impl/HyperRobotState.js",
+			"global": true
+		},
+		"HyperRobotStateType": {
+			"type": "script",
+			"path": "script/hyperRobot/impl/HyperRobotStateType.js",
+			"global": true
+		},
+		"MutableCellContainer": {
+			"type": "script",
+			"path": "script/hyperRobot/impl/MutableCellContainer.js",
+			"global": true
+		},
+		"visualizeBoard": {
+			"type": "script",
+			"path": "script/hyperRobot/impl/visualizeBoard.js",
+			"global": true
+		},
+		"Board": {
+			"type": "script",
+			"path": "script/hyperRobot/model/Board.js",
+			"global": true
+		},
+		"HyperRobotPlayer": {
+			"type": "script",
+			"path": "script/hyperRobot/model/HyperRobotPlayer.js",
+			"global": true
+		},
+		"createRuledCellArray.test": {
+			"type": "script",
+			"path": "script/__test__/createRuledCellArray.test.js",
+			"global": true
+		},
+		"IView": {
+			"type": "script",
+			"path": "script/hyperRobot/views/IView.js",
+			"global": true
+		},
+		"BoxBuilder": {
+			"type": "script",
+			"path": "script/xxxxxx/builder/BoxBuilder.js",
+			"global": true
+		},
+		"Builder": {
+			"type": "script",
+			"path": "script/xxxxxx/builder/Builder.js",
+			"global": true
+		},
+		"ButtonBuilder": {
+			"type": "script",
+			"path": "script/xxxxxx/builder/ButtonBuilder.js",
+			"global": true
+		},
+		"LabelBuilder": {
+			"type": "script",
+			"path": "script/xxxxxx/builder/LabelBuilder.js",
+			"global": true
+		},
+		"Box": {
+			"type": "script",
+			"path": "script/xxxxxx/entity/Box.js",
+			"global": true
+		},
+		"Button": {
+			"type": "script",
+			"path": "script/xxxxxx/entity/Button.js",
+			"global": true
+		},
+		"Entity": {
+			"type": "script",
+			"path": "script/xxxxxx/entity/Entity.js",
+			"global": true
+		},
+		"Label": {
+			"type": "script",
+			"path": "script/xxxxxx/entity/Label.js",
+			"global": true
+		},
+		"EntityRenderer": {
+			"type": "script",
+			"path": "script/xxxxxx/EntityRenderer.js",
+			"global": true
+		},
+		"CanvasBox": {
+			"type": "script",
+			"path": "script/xxxxxx/impl/CanvasBox.js",
+			"global": true
+		},
+		"CanvasButton": {
+			"type": "script",
+			"path": "script/xxxxxx/impl/CanvasButton.js",
+			"global": true
+		},
+		"CanvasEntity": {
+			"type": "script",
+			"path": "script/xxxxxx/impl/CanvasEntity.js",
+			"global": true
+		},
+		"CanvasLabel": {
+			"type": "script",
+			"path": "script/xxxxxx/impl/CanvasLabel.js",
+			"global": true
+		},
+		"xxxUtils": {
+			"type": "script",
+			"path": "script/xxxxxx/xxxUtils.js",
 			"global": true
 		}
 	}

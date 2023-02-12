@@ -7,7 +7,6 @@
     ],
     "module": "commonjs",
     "outDir": "script",
-    "types": [],
     "noImplicitAny": true,
     "noUnusedLocals": false,
     "declaration": true,
@@ -16,7 +15,9 @@
     "strictNullChecks": true
   },
   "files": [
-    "node_modules/@akashic/akashic-engine/index.runtime.d.ts"
+    "node_modules/@akashic/akashic-engine/index.runtime.d.ts",
+    "./src/utils/randomInt.ts",
+    "src/hyperRobot/const.ts"
   ],
   "include": [
     "src/**/*.ts",

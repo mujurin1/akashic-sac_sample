@@ -16,22 +16,31 @@ export const StandardMarks = {
   [StandardShape.circle]: StandardColors.map(color => ({
     shape: StandardShape.circle,
     color
-  })) as Readonly<Mark[]>,
+  })) as readonly Mark[],
   [StandardShape.square]: StandardColors.map(color => ({
     shape: StandardShape.square,
     color
-  })) as Readonly<Mark[]>,
+  })) as readonly Mark[],
   [StandardShape.triangle]: StandardColors.map(color => ({
     shape: StandardShape.triangle,
     color
-  })) as Readonly<Mark[]>,
+  })) as readonly Mark[],
   [StandardShape.star]: StandardColors.map(color => ({
     shape: StandardShape.star,
     color
-  })) as Readonly<Mark[]>
+  })) as readonly Mark[]
 } as const;
 
 export const WildMark = {
   shape: WildShape,
   color: WildColor
 } as const satisfies Mark;
+
+export const AllStandardMarks = [
+  ...StandardMarks.circle,
+  ...StandardMarks.square,
+  ...StandardMarks.triangle,
+  ...StandardMarks.star
+] as const;
+
+export const AllMarks = [...AllStandardMarks, WildMark];

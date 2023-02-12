@@ -1,3 +1,5 @@
+import { randomInt } from "./randomInt";
+
 /**
  * 中身をシャッフルした新しい配列を返す
  * @param array
@@ -14,9 +16,9 @@ export const shuffleArray = <T>(array: readonly T[]): T[] => {
 };
 
 /**
- * 0以上max未満の整数の乱数を返す
+ * 配列の中からランダムで１つ取り出す
  */
-export const randomInt = (max: number): number => Math.floor(g.game.random.generate() * max);
+export const randomGet = <T>(ary: readonly T[]): T => ary[randomInt(ary.length)];
 
 /**
  * `min`以上`max`未満の範囲の整数の配列を返す

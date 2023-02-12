@@ -1,18 +1,50 @@
-export type Dir = "top" | "bottom" | "left" | "right";
-export const Dirs = ["top", "bottom", "left", "right"] as const;
+/*
+ * 方向
+ */
 export const Dir = {
-  toPoint(dir: Dir): Point {
-    switch (dir) {
-      case "top":
-        return { x: 0, y: -1 };
-      case "right":
-        return { x: 1, y: 0 };
-      case "bottom":
-        return { x: 0, y: 1 };
-      case "left":
-        return { x: -1, y: 0 };
-    }
+  top: "top",
+  bottom: "bottom",
+  left: "left",
+  right: "right"
+} as const;
+export type Dir = typeof Dir[keyof typeof Dir];
+export const Dirs = [Dir.top, Dir.bottom, Dir.left, Dir.right] as const;
+
+export const dirToPoint = (dir: Dir): Point => {
+  switch (dir) {
+    case "top":
+      return { x: 0, y: -1 };
+    case "right":
+      return { x: 1, y: 0 };
+    case "bottom":
+      return { x: 0, y: 1 };
+    case "left":
+      return { x: -1, y: 0 };
   }
+};
+
+// export type Dir = "top" | "bottom" | "left" | "right";
+// export const Dirs = ["top", "bottom", "left", "right"] as const;
+// export const Dir = {
+//   toPoint(dir: Dir): Point {
+//     switch (dir) {
+//       case "top":
+//         return { x: 0, y: -1 };
+//       case "right":
+//         return { x: 1, y: 0 };
+//       case "bottom":
+//         return { x: 0, y: 1 };
+//       case "left":
+//         return { x: -1, y: 0 };
+//     }
+//   }
+// };
+
+export type DirRecord = {
+  [Dir.top]: boolean;
+  [Dir.right]: boolean;
+  [Dir.bottom]: boolean;
+  [Dir.left]: boolean;
 };
 
 export type Point = {

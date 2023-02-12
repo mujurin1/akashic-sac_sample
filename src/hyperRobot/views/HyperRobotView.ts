@@ -1,4 +1,3 @@
-import { HyperRobot } from "../model/HyperRobot";
 import { Dir, StandardColor } from "../type";
 
 export interface HyperRobotView {
@@ -7,11 +6,6 @@ export interface HyperRobotView {
 }
 
 export interface CreateHyperRobotViewParam {
-  /**
-   * 表示するゲームの状態として利用する\
-   * ゲームの状態を変更する操作は行わない
-   */
-  readonly hyperRobot: HyperRobot;
   /**
    * ピースを動かす操作を受け取ったら呼ばれる
    * @param [動かすピース, 方向]

@@ -1,11 +1,14 @@
-import { Dir } from "../type";
-import { Cell } from "./Cell";
-import { Mark } from "./Mark";
+import { Dir, Point } from "../type";
+import { Cell } from "../model/Cell";
+import { Mark } from "../model/Mark";
 
 type MarkedCell = { x: number; y: number; mark: Mark };
 type WallCell = { x: number; y: number; dir: Dir };
 
-export class MutableBoard {
+/**
+ * `CellContainer`を生成するために使用する
+ */
+export class MutableCellContainer {
   private readonly markedCells: MarkedCell[] = [];
   private readonly walls: WallCell[] = [];
 
@@ -54,8 +57,8 @@ export class MutableBoard {
   /**
    * ボードの時計回りに回転する
    */
-  rotate(angle: 0 | 90 | 180 | 270, cx: number, cy: number): MutableBoard {
-    let board: MutableBoard = this;
+  rotate(angle: 0 | 90 | 180 | 270, cx: number, cy: number): MutableCellContainer {
+    let board: MutableCellContainer = this;
     for (let i = 0; i < angle / 90; i++) {
       board = board.rotate90(cx, cy);
     }
@@ -66,8 +69,8 @@ export class MutableBoard {
   /**
    * ボードを時計回りに90度回転させる
    */
-  rotate90(cx: number, cy: number): MutableBoard {
-    const newBoard = new MutableBoard();
+  rotate90(cx: number, cy: number): MutableCellContainer {
+    const newBoard = new MutableCellContainer();
 
     this.walls.forEach(wall => {
       const { x, y } = rotateXY(wall.x, wall.y, cx, cy);
@@ -86,9 +89,46 @@ export class MutableBoard {
    * 別のボードのゴール・壁を結合する (破壊的)
    * @param board
    */
-  merge(board: MutableBoard): void {
+  merge(board: MutableCellContainer): void {
     this.walls.push(...board.walls);
     this.markedCells.push(...board.markedCells);
+  }
+
+  /**
+   * 指定座標の周囲8マスにゴールが無いかチェックする
+   * @returns `true`:周囲8マスにゴールが無い
+   */
+  aroundIsNotGoal(point: Point): boolean {
+    const goals = this.getMarkedCells();
+    for (let i = 0; i < goals.length; i++) {
+      const goal = goals[i];
+      if (Math.abs(point.x - goal.x) <= 1 && Math.abs(point.y - goal.y) <= 1) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * ゴール同士が１マス以上間隔を空けているかチェックする
+   * @returns チェックに合格すれば`true`
+   */
+  markedCellSpaceCheck(): boolean {
+    const goals = this.getMarkedCells();
+
+    // ゴールの周囲8マスに別のゴールが無いかチェック
+    for (let i = goals.length - 1; i >= 0; i--) {
+      const goal = goals[i];
+
+      for (let j = i + 1; j < goals.length; j++) {
+        const checkGoal = goals[j];
+        if (Math.abs(goal.x - checkGoal.x) <= 1 && Math.abs(goal.y - checkGoal.y) <= 1) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 }
 
