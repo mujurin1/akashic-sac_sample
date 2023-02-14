@@ -25,10 +25,9 @@ const initialized = () => {
   if (!g.game.env.isServer)
     (<any>g.game.renderers[0]).canvasRenderingContext2D.imageSmoothingEnabled = false;
 
-  const client = g.game.env.client;
-  if (client == null) return;
+  if (!g.game.env.isClient) return;
 
-  client.addActionSet(
+  g.game.env.client.addActionSet(
     JoinPlayer.createActionSet(data => {
       if (data.sendPlayerId != null) global.playerManager.addPlayer(data.sendPlayerId, data.name);
     })

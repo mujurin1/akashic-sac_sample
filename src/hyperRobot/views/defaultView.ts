@@ -1,17 +1,18 @@
-import { StandardColor, Point, StandardShape, WildShape } from "../type";
+import { StandardColor, Point, StandardShape, WildShape, StandardColors, Dir } from "../type";
 import { Cell } from "../model/Cell";
-import { CanvasDrawer } from "../../CanvasDrawer";
+import { CanvasDrawer } from "akashic-sac";
 import { Piece } from "../model/Piece";
 import { BOARD_SIZE } from "../const";
 import { ManipulateType, UpdateType } from "../impl/HyperRobotStateType";
 import { HyperRobotStateHolder } from "../../chapters/Game/Game_X";
-import { BoxBuilder } from "../../xxxxxx/builder/BoxBuilder";
-import { ButtonBuilder } from "../../xxxxxx/builder/ButtonBuilder";
-import { LabelBuilder } from "../../xxxxxx/builder/LabelBuilder";
-import { EntityManager } from "../../xxxxxx/EntityRenderer";
-import { CanvasLabel } from "../../xxxxxx/impl/CanvasLabel";
-import { CanvasBox } from "../../xxxxxx/impl/CanvasBox";
-import { CanvasButton } from "../../xxxxxx/impl/CanvasButton";
+import { EntityRenderer } from "../../xxxxxx/EntityRenderer";
+import { CanvasLabel } from "../../xxxxxx/enttity/CanvasLabel";
+import { CanvasBox } from "../../xxxxxx/enttity/CanvasBox";
+import { CanvasButton } from "../../xxxxxx/enttity/CanvasButton";
+import { CanvasEntity } from "../../xxxxxx/enttity/CanvasEntity";
+import { CanvasElipse } from "../../xxxxxx/enttity/CanvasElipse";
+import { CanvasSeparator } from "../../xxxxxx/enttity/CanvasSeparator";
+import { CanvasArrow } from "../../xxxxxx/enttity/CanvasArrow";
 
 //#region defaultViewState.ts
 
@@ -405,13 +406,14 @@ export interface DefaultViewResult {
 }
 
 export const createDefaultView = (param: DefaultViewParam): DefaultViewResult => {
-  const { stateHolder } = param;
-
   const display = g.game.env.createEntity(g.E, { width: g.game.width, height: g.game.height });
-  display.append(createBoard(stateHolder));
-  display.append(createUI(stateHolder));
 
-  const update = ({ data, type }: UpdateType): void => {};
+  display.append(createBoard(param.stateHolder));
+  display.append(createUI(param));
+
+  const update = ({ data, type }: UpdateType): void => {
+    display.modified();
+  };
 
   return {
     display,
@@ -450,132 +452,194 @@ const createBoard = (stateHolder: HyperRobotStateHolder): g.E => {
 
 /**
  * ゲームのUIを描画するエンティティの作成
- * @param stateHolder ゲームの状態
  */
-const createUI = (stateHolder: HyperRobotStateHolder): g.E => {
+const createUI = (param: DefaultViewParam): g.E => {
+  const { stateHolder, manipulate } = param;
+
+  const declaratCount = (count: number) => {
+    const state = stateHolder.state;
+
+    if (state.players.length === 0) {
+      manipulate({
+        type: "MAN_JOIN",
+        data: { playerId: g.game.selfId! }
+      });
+      return;
+    }
+
+    if (state.state === "STA_WAIT") {
+      manipulate({
+        type: "MAN_NEXT_TURN",
+        data: { nextTarget: state.remaindMarks[0] }
+      });
+    } else if (state.state === "STA_THINKING") {
+      if (count > 0) {
+        manipulate({
+          type: "MAN_DECLARE",
+          data: { playerId: g.game.selfId!, count }
+        });
+        manipulate({ type: "MAN_DECLARE_END", data: {} });
+      }
+    }
+  };
+  const movePiece = (color: StandardColor, dir: Dir) => {
+    const state = stateHolder.state;
+    if (state.state === "STA_ANSWER") {
+      manipulate({
+        type: "MAN_MOVE",
+        data: { color, dir }
+      });
+    }
+  };
+
+  const render = new EntityRenderer();
+
+  const declaration = createDeclaration(render, declaratCount);
+  const move = createMove(stateHolder, render, movePiece);
+
+  render.entities.push(declaration);
+  render.entities.push(move);
+
+  return render.display;
+};
+
+const createDeclaration = (
+  render: EntityRenderer,
+  answerClick: (count: number) => void
+): CanvasEntity => {
   let declarationCount = 0;
 
   const incelement = (ev: g.PointDownEvent) => {
     declarationCount += 1;
     countLabel.text = declarationCount + "";
-    render.display.modified();
+    render.modified();
   };
   const declement = (ev: g.PointDownEvent) => {
     declarationCount -= 1;
     countLabel.text = declarationCount + "";
-    render.display.modified();
+    render.modified();
   };
 
-  // 宣言ボタンエリア定義
-  const countLabel = new LabelBuilder(CanvasLabel)
-    .text(declarationCount + "", "#000")
-    .position(10, 30)
+  const countLabel = new CanvasLabel()
+    .setText(declarationCount + "", "#000")
     .size(100, 100)
-    .font("serif", 72)
-    .build();
+    .setFont("serif", 72);
 
-  const declearField = new BoxBuilder(CanvasBox)
-    .position(670, 510)
-    .color("#d8d8d8")
+  const counter = new CanvasBox()
+    .set("backgroundColor", "#d8d8d8")
     .size(400, 180)
-    .layout({
+    .setBoxLayout({
       orientation: "holizontal",
-      gapX: 10,
-      gapY: 0
+      gap: 10,
+      aligne: "middle",
+      margineCross: 8
     })
-    .children([
+    .setChildren([
       countLabel,
-      new ButtonBuilder(CanvasButton)
-        .color("#84ffb4")
-        .text("-", "#000")
-        .font("serif", 72)
-        .size(100, 100)
-        .touchable(true)
-        .onPointDown(incelement)
-        .build(),
-      new ButtonBuilder(CanvasButton)
-        .color("#84ffb4")
-        .text("+", "#000")
-        .font("serif", 72)
-        .size(100, 100)
-        .touchable(true)
-        .onPointDown(declement)
-        .build()
-    ])
-    .build();
+      new CanvasButton()
+        .set("backgroundColor", "#84ffb4")
+        .size(120, 120)
+        .setText("－", "#000")
+        .setFont("serif", 100)
+        .set("margine", { x: 8, y: 12 })
+        .set("touchable", true)
+        .pointDown(declement),
+      new CanvasButton()
+        .set("backgroundColor", "#84ffb4")
+        .size(120, 120)
+        .setText("＋", "#000")
+        .setFont("serif", 100)
+        .set("margine", { x: 8, y: 12 })
+        .set("touchable", true)
+        .pointDown(incelement)
+    ]);
 
-  const render = new EntityManager();
-  render.entities.push(declearField);
+  const answer = new CanvasButton()
+    .size(160, 160)
+    .right(counter, 20, 10)
+    .setText("回答", "black")
+    .set("backgroundColor", "#666")
+    .setFont("serif", 60)
+    .pointDown(() => answerClick(declarationCount));
 
-  return render.display;
+  return new CanvasEntity()
+    .position(670, 510) //
+    .setChildren([counter, answer]);
+};
 
-  // const declearEntities = ViewEntityBuilder.creae()
-  //   .fillStyle("#d8d8d8")
-  //   .fillRect(670, 510, 400, 180)
-  //   .child(builder => {
-  //     builder
-  //       .translate(10, 30)
-  //       .fillStyle("#000")
-  //       .textStyle("serif", 72)
-  //       .label(() => declarationCount + "", 0, 80, 80, 0)
+const createMove = (
+  stateHolder: HyperRobotStateHolder,
+  render: EntityRenderer,
+  movePiece: (color: StandardColor, dir: Dir) => void
+): CanvasEntity => {
+  let selectColor: StandardColor = StandardColors[0];
 
-  //       .relative("right", 0, 0)
-  //       .repeat(
-  //         [
-  //           { text: "－", method: declement },
-  //           { text: "＋", method: inclementButtonTouchEvent }
-  //         ],
-  //         130,
-  //         0,
-  //         // incBtnBuilder.onPointDown(handlePointDown).onPointMove(handlePointMove)
-  //         (builder, value) => {
-  //           builder
-  //             .fillStyle("#84ffb4")
-  //             // .fillRect(10, 0, 120, 120, { touched: value.method })
-  //             .fillRect(10, 0, 120, 120, { touchable: true }, inclementButtonBuilder => {})
-  //             .child(builder => {
-  //               builder
-  //                 .fillStyle("#000")
-  //                 .textStyle("serif", 90) //
-  //                 .label(value.text, 10, 90, 0, 0);
-  //             });
-  //         }
-  //       );
-  //   })
-  //   .build();
+  const changeColor = (color: StandardColor) => {
+    selectColor = color;
+    console.log(selectColor);
 
-  // console.log(declearField);
+    render.modified();
+  };
 
-  // const ui = g.game.env.createEntity(CanvasDrawer, {
-  //   width: g.game.width,
-  //   height: g.game.height,
-  //   pixelScale: 1,
-  //   touchable: true,
-  //   draw: ctx => {
-  //     const state = stateHolder.state;
-  //     ctx.save();
+  const moveDir = (dir: Dir) => {
+    movePiece(selectColor, dir);
+  };
 
-  //     if (state.state === "STA_THINKING") {
-  //       // ViewEntityRender(ctx, declearEntities);
-  //       // ViewEntityRender(ctx, userList);
-  //       // ViewEntityRender(ctx, timer);
-  //     } else if (state.state === "STA_ANSWER") {
-  //     } else if (state.state === "STA_WAIT") {
-  //       declarationCount = 0;
-  //     } else if (state.state === "STA_GAMEOVER") {
-  //     }
+  const moveBox = new CanvasEntity()
+    .position(670, 50) //
+    .size(550, 400);
 
-  //     ctx.restore();
-  //   }
-  // });
+  const colorButtons: CanvasEntity[] = StandardColors.map(color =>
+    new CanvasElipse()
+      .size(120, 120)
+      .set("color", color)
+      .set("touchable", true)
+      .pointDown(() => changeColor(color))
+  );
 
-  // ui.onPointDown.add(ev => {
-  //   const entity = ViewEntityTouched(declearEntities, ev.point);
-  // });
-  // ui.onPointMove.add(ev => {});
-  // ui.onPointUp.add(ev => {});
+  const colorBox = new CanvasBox()
+    .set("backgroundColor", "#d8d8d8")
+    // .position(670, 310)
+    .position(10, 10)
+    .size(520, 180)
+    .setBoxLayout({
+      orientation: "holizontal",
+      gap: 10,
+      aligne: "middle",
+      margineMain: 5,
+      margineCross: 5
+    })
+    .setChildren(colorButtons);
 
-  // return ui;
+  const top = new CanvasArrow()
+    .size(120, 120)
+    .position(140, 0)
+    .anchor("middle")
+    .arrowStyle("yellow", "red", 5)
+    // .arrowStyle("gray", "red", 5)
+    .set("touchable", true)
+    .rotate(270);
+
+  const arrowBox = new CanvasEntity().position(120, 200).setChildren([
+    top.pointDown(() => moveDir("top")),
+    new CanvasArrow() // left
+      .override(top)
+      .position(0, 140)
+      .set("angle", 180)
+      .pointDown(() => moveDir("left")),
+    new CanvasArrow() // bottom
+      .override(top)
+      .position(140, 140)
+      .set("angle", 90)
+      .pointDown(() => moveDir("bottom")),
+    new CanvasArrow() // right
+      .override(top)
+      .position(280, 140)
+      .set("angle", 0)
+      .pointDown(() => moveDir("right"))
+  ]);
+
+  return moveBox.setChildren([colorBox, arrowBox]);
 };
 
 //#endregion defaultView.ts

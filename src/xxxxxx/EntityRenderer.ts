@@ -1,8 +1,7 @@
-import { CanvasDrawer } from "../CanvasDrawer";
-import { Point } from "../hyperRobot/type";
-import { CanvasEntity } from "./impl/CanvasEntity";
+import { CanvasDrawer, Client } from "akashic-sac";
+import { CanvasEntity } from "./enttity/CanvasEntity";
 
-export class EntityManager {
+export class EntityRenderer {
   public readonly display: g.E;
 
   public touchEntity: CanvasEntity | undefined;
@@ -20,24 +19,36 @@ export class EntityManager {
     this.display.onPointMove.add(this.onPointMove.bind(this));
     this.display.onPointUp.add(this.onPointUp.bind(this));
     this.display.onUpdate.add(this.onUpdate.bind(this));
+
+    // キャンバスでの文字の描画位置を調整する
+    const ctx = Client.env.context;
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+  }
+
+  /**
+   * 描画を更新します
+   */
+  public modified(): void {
+    this.display.modified();
   }
 
   private draw(context: CanvasRenderingContext2D): void {
-    context.textBaseline = "top";
-
     this.entities.forEach((entity: CanvasEntity) => {
-      entity.renderSelf(context);
+      entity.render(context);
     });
   }
 
   private onPointDown(ev: g.PointDownEvent): void {
-    const entity = reverseEntityFind(
-      this.entities,
-      entity => checkTouch(entity, ev.point) //
-    );
-    this.touchEntity = entity;
+    for (let i = this.entities.length - 1; i >= 0; i--) {
+      const child = this.entities[i];
+      const entity = child.checkTouch(ev.point);
 
-    if (entity != null) entity.onPointDown?.(ev);
+      if (entity == null) continue;
+
+      entity.onPointDown?.(ev);
+      return;
+    }
   }
   private onPointMove(ev: g.PointMoveEvent): void {
     if (this.touchEntity == null) return;
@@ -62,43 +73,10 @@ const entityForEach = (entities: readonly CanvasEntity[], fn: (entity: CanvasEnt
   for (const entity of entities) {
     fn(entity);
 
-    if (entity.children != null) entityForEach(entity.children, fn);
+    entityForEach(entity.children, fn);
   }
-};
-
-/**
- * 最初に条件に一致するエンティティを返す\
- * 子孫もチェックする\
- * 子(後ろの)エンティティを先に検索する
- * @returns
- */
-const reverseEntityFind = (
-  entities: readonly CanvasEntity[],
-  check: (entity: CanvasEntity) => boolean
-): CanvasEntity | undefined => {
-  for (let i = entities.length - 1; i--; i >= 0) {
-    const entity = entities[i];
-
-    if (entity.children != null) {
-      const res = reverseEntityFind(entity.children, check);
-      if (res != null) return res;
-    }
-
-    if (check(entity)) return entity;
-  }
-
-  return undefined;
 };
 
 const onUpdate = (entity: CanvasEntity): void => {
   if (entity.onUpdate != null) entity.onUpdate();
-};
-
-const checkTouch = (entity: CanvasEntity, point: Point): boolean => {
-  //prettier-ignore
-  return (
-    entity.touchable && !entity.hide &&
-    entity.x <= point.x && point.x <= entity.x + entity.width &&
-    entity.y <= point.y && point.y <= entity.y + entity.height
-  );
 };

@@ -131,9 +131,15 @@ export class HyperRobotState implements CellContainer {
     const move = dirToPoint(dir);
     const point: Point = { x: piece.x, y: piece.y };
 
+    const movedPoint = { ...point };
     while (!this.getCell(point.x, point.y).walls[dir]) {
-      point.x += move.x;
-      point.y += move.y;
+      movedPoint.x += move.x;
+      movedPoint.y += move.y;
+
+      if (this.pieces.some(p => p.x === movedPoint.x && p.y === movedPoint.y)) break;
+
+      point.x = movedPoint.x;
+      point.y = movedPoint.y;
     }
 
     return point;
@@ -188,7 +194,7 @@ export class HyperRobotState implements CellContainer {
   private MANIPUlATE_ANY(res: UpdateType[], { type, data }: ManipulateType): boolean {
     // いずれの条件にも引っ掛からない場合は最後の`else return false`を通る
     if (type === "MAN_JOIN") {
-      if (this.players.some(player => player.id !== data.playerId))
+      if (this.players.length === 0 || this.players.some(player => player.id !== data.playerId))
         res.push({ type: "UPD_JOIN", data });
     } else return false;
 
@@ -362,6 +368,7 @@ export class HyperRobotState implements CellContainer {
   private UPDATE_Wait({ type, data }: UpdateType): HyperRobotState {
     if (type === "UPD_TRANSITION_THINKING") {
       return this.with({
+        state: "STA_THINKING",
         target: data.nextTarget,
         remaindMarks: this.remaindMarks.filter(mark => mark !== data.nextTarget)
       });

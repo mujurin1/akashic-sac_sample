@@ -41,7 +41,7 @@ export class Game_X extends Chapter {
 
     this.stateHolder = {
       state: HyperRobotState.create(
-        ["1", "2"],
+        [],
         container,
         createRuledPieces(container),
         StandardMarks.circle[0]
@@ -54,10 +54,15 @@ export class Game_X extends Chapter {
 
     const { display, update } = createDefaultView({
       stateHolder: this.stateHolder,
-      manipulate: data => {}
-    });
+      manipulate: manipulate => {
+        const datas = this.state.MANIPUlATE_(manipulate);
+        for (const data of datas) {
+          this.stateHolder.state = this.state.UPDATE_(data);
 
-    console.log(this);
+          update(data);
+        }
+      }
+    });
 
     // visualizeHyperRobot(hyperRobot);
 

@@ -18,7 +18,7 @@ export class Title extends Chapter {
   private lastJoinedPlayer: Label;
 
   init(): void {
-    const client = g.game.env.client!;
+    const client = Chapter.env.client;
 
     //#region ビューの初期化
     this.colorRect = g.game.env.createEntity(g.FilledRect, {

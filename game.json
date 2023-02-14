@@ -45,17 +45,18 @@
 		"node_modules/akashic-sac/lib/index.js",
 		"node_modules/akashic-sac/lib/utils/Image.js",
 		"node_modules/akashic-sac/lib/utils/LocalStorage.js",
-		"node_modules/akashic-sac/lib/utils/DragDrop.js",
 		"node_modules/akashic-sac/lib/impl/ChapterController.js",
-		"node_modules/akashic-sac/lib/impl/Client.js",
-		"node_modules/akashic-sac/lib/impl/Server.js",
 		"node_modules/akashic-sac/lib/Chapter.js",
 		"node_modules/akashic-sac/lib/actions/ErrorMessage.js",
-		"node_modules/akashic-sac/lib/actions/SwitchChapter.js",
 		"node_modules/akashic-sac/lib/utils/AkashicEnigne.js",
 		"node_modules/akashic-sac/lib/impl/Common.js",
 		"node_modules/akashic-sac/lib/utils/FrameLabel.js",
-		"node_modules/box2dweb/box2d.js"
+		"node_modules/box2dweb/box2d.js",
+		"node_modules/akashic-sac/lib/service/Client.js",
+		"node_modules/akashic-sac/lib/service/DragDrop.js",
+		"node_modules/akashic-sac/lib/service/Server.js",
+		"node_modules/akashic-sac/lib/service/SwitchChapter.js",
+		"node_modules/akashic-sac/lib/impl/CanvasDrawer.js"
 	],
 	"assets": {
 		"default_frame": {
@@ -67,16 +68,6 @@
 		"JoinPlayer": {
 			"type": "script",
 			"path": "script/actions/JoinPlayer.js",
-			"global": true
-		},
-		"CanvasDrawer": {
-			"type": "script",
-			"path": "script/CanvasDrawer.js",
-			"global": true
-		},
-		"CanvasEntity copy": {
-			"type": "script",
-			"path": "script/CanvasEntity copy.js",
 			"global": true
 		},
 		"Game_X": {
@@ -152,11 +143,6 @@
 		"nomralView": {
 			"type": "script",
 			"path": "script/hyperRobot/views/normal/nomralView.js",
-			"global": true
-		},
-		"ImageDataEntity copy": {
-			"type": "script",
-			"path": "script/ImageDataEntity copy.js",
 			"global": true
 		},
 		"main": {
@@ -259,46 +245,6 @@
 			"path": "script/hyperRobot/views/IView.js",
 			"global": true
 		},
-		"BoxBuilder": {
-			"type": "script",
-			"path": "script/xxxxxx/builder/BoxBuilder.js",
-			"global": true
-		},
-		"Builder": {
-			"type": "script",
-			"path": "script/xxxxxx/builder/Builder.js",
-			"global": true
-		},
-		"ButtonBuilder": {
-			"type": "script",
-			"path": "script/xxxxxx/builder/ButtonBuilder.js",
-			"global": true
-		},
-		"LabelBuilder": {
-			"type": "script",
-			"path": "script/xxxxxx/builder/LabelBuilder.js",
-			"global": true
-		},
-		"Box": {
-			"type": "script",
-			"path": "script/xxxxxx/entity/Box.js",
-			"global": true
-		},
-		"Button": {
-			"type": "script",
-			"path": "script/xxxxxx/entity/Button.js",
-			"global": true
-		},
-		"Entity": {
-			"type": "script",
-			"path": "script/xxxxxx/entity/Entity.js",
-			"global": true
-		},
-		"Label": {
-			"type": "script",
-			"path": "script/xxxxxx/entity/Label.js",
-			"global": true
-		},
 		"EntityRenderer": {
 			"type": "script",
 			"path": "script/xxxxxx/EntityRenderer.js",
@@ -306,27 +252,37 @@
 		},
 		"CanvasBox": {
 			"type": "script",
-			"path": "script/xxxxxx/impl/CanvasBox.js",
+			"path": "script/xxxxxx/enttity/CanvasBox.js",
 			"global": true
 		},
 		"CanvasButton": {
 			"type": "script",
-			"path": "script/xxxxxx/impl/CanvasButton.js",
+			"path": "script/xxxxxx/enttity/CanvasButton.js",
 			"global": true
 		},
 		"CanvasEntity": {
 			"type": "script",
-			"path": "script/xxxxxx/impl/CanvasEntity.js",
+			"path": "script/xxxxxx/enttity/CanvasEntity.js",
 			"global": true
 		},
 		"CanvasLabel": {
 			"type": "script",
-			"path": "script/xxxxxx/impl/CanvasLabel.js",
+			"path": "script/xxxxxx/enttity/CanvasLabel.js",
 			"global": true
 		},
-		"xxxUtils": {
+		"CanvasElipse": {
 			"type": "script",
-			"path": "script/xxxxxx/xxxUtils.js",
+			"path": "script/xxxxxx/enttity/CanvasElipse.js",
+			"global": true
+		},
+		"CanvasSeparator": {
+			"type": "script",
+			"path": "script/xxxxxx/enttity/CanvasSeparator.js",
+			"global": true
+		},
+		"CanvasArrow": {
+			"type": "script",
+			"path": "script/xxxxxx/enttity/CanvasArrow.js",
 			"global": true
 		}
 	}
