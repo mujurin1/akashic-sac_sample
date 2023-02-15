@@ -6,6 +6,14 @@ export class CanvasButton extends CanvasLabel {
   touchable: boolean = true;
   margine: Point = { x: 0, y: 0 };
 
+  override(entity: this): this {
+    this.backgroundColor = entity.backgroundColor;
+    this.touchable = entity.touchable;
+    this.margine = { ...entity.margine };
+
+    return super.override(entity);
+  }
+
   renderSelf(ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = this.backgroundColor;
     ctx.fillRect(0, 0, this.width, this.height);

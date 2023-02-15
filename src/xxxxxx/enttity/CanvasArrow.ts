@@ -8,7 +8,7 @@ export class CanvasArrow extends CanvasEntity {
   borderColor: string = "red";
   borderWidth: number = 5;
 
-  override(entity: CanvasArrow): this {
+  override(entity: this): this {
     this.color = entity.color;
     this.borderColor = entity.borderColor;
     this.borderWidth = entity.borderWidth;

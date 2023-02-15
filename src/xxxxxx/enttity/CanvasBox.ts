@@ -26,6 +26,13 @@ export class CanvasBox extends CanvasEntity {
     margineCross: 0
   };
 
+  override(entity: this): this {
+    this.backgroundColor = entity.backgroundColor;
+    this.boxLayout = { ...entity.boxLayout };
+
+    return super.override(entity);
+  }
+
   setChildren(entities: CanvasEntity[]): this {
     this._children = entities;
 

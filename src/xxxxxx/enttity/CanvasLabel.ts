@@ -6,6 +6,15 @@ export class CanvasLabel extends CanvasEntity {
   font: string = "serif";
   fontSize: number = 10;
 
+  override(entity: this): this {
+    this.text = entity.text;
+    this.textColor = entity.textColor;
+    this.font = entity.font;
+    this.fontSize = entity.fontSize;
+
+    return super.override(entity);
+  }
+
   setText(text: string, color: string): this {
     this.text = text;
     this.textColor = color;

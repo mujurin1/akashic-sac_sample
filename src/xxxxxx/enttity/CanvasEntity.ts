@@ -29,7 +29,13 @@ export class CanvasEntity {
   onPointUp?: (ev: g.PointUpEvent) => void;
   onUpdate?: () => void;
 
-  override(entity: CanvasEntity): this {
+  /**
+   * `children`以外のプロパティを引数のエンティティで上書きします
+   *
+   * 値の内部まで全てコピーした値で上書きすることを保証します
+   * (参照を共有しない)
+   */
+  override(entity: this): this {
     this.x = entity.x;
     this.y = entity.y;
     this.width = entity.width;

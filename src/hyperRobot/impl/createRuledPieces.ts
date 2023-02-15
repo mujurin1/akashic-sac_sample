@@ -4,7 +4,6 @@ import { BOARD_SIZE } from "../const";
 import { Piece } from "../model/Piece";
 import { Point, StandardColors, StandardColor } from "../type";
 import { CellContainer } from "./CellContainer";
-import { HyperRobotState } from "./HyperRobotState";
 
 /**
  * ボードの初期配置の駒を返す

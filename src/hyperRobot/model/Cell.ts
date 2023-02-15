@@ -6,7 +6,7 @@ export interface Cell {
   readonly y: number;
 
   /** { [dir]: 壁が存在するか } */
-  readonly walls: DirRecord;
+  readonly walls: Readonly<DirRecord>;
 
   readonly mark: Mark | undefined;
 }

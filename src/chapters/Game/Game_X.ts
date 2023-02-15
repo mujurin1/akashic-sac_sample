@@ -1,15 +1,14 @@
-import { Chapter, createFrameLabel, SwitchChapter } from "akashic-sac";
+import { Chapter } from "akashic-sac";
 import { createDefaultView } from "../../hyperRobot/views/defaultView";
 import { HyperRobotState } from "../../hyperRobot/impl/HyperRobotState";
 import { createRuledCellArray } from "../../hyperRobot/impl/createRuledCellArray";
 import { createRuledPieces } from "../../hyperRobot/impl/createRuledPieces";
 import { CellContainer } from "../../hyperRobot/impl/CellContainer";
 import { StandardMarks } from "../../hyperRobot/model/Mark";
-import { global } from "../../global/global";
-import { Title } from "../title";
+import { IHyperRobotState } from "../../hyperRobot/model/BoardState";
 
 export interface HyperRobotStateHolder {
-  state: HyperRobotState;
+  state: IHyperRobotState;
 }
 
 export class Game_X extends Chapter {
@@ -18,8 +17,6 @@ export class Game_X extends Chapter {
   get state() {
     return this.stateHolder.state;
   }
-  // state: HyperRobotState;
-  // readonly getState = () => this.state;
 
   init(): void {
     // const nextButton = createFrameLabel({

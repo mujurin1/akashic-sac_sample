@@ -1,3 +1,4 @@
+import { IHyperRobotState } from "../model/BoardState";
 import { Cell } from "../model/Cell";
 import { HyperRobotPlayer } from "../model/HyperRobotPlayer";
 import { AllMarks, Mark, WildMark } from "../model/Mark";
@@ -6,9 +7,9 @@ import { Dir, Dirs, StandardColor, dirToPoint, Point } from "../type";
 import { CellContainer } from "./CellContainer";
 import { StateType, UpdateType, ManipulateType } from "./HyperRobotStateType";
 
-interface WithArgs extends Omit<Partial<HyperRobotState>, "cellContainer"> {}
+interface WithArgs extends Omit<Partial<IHyperRobotState>, "cellContainer"> {}
 
-export class HyperRobotState implements CellContainer {
+export class HyperRobotState implements IHyperRobotState {
   public get cells() {
     return this.cellContainer.cells;
   }
@@ -34,14 +35,14 @@ export class HyperRobotState implements CellContainer {
 
   //#region 生成・更新
   /**
-   * `HyperRobotState`を新しく生成します
+   * `IHyperRobotState`を新しく生成します
    */
   public static create(
     playerIds: readonly string[],
     cellContainer: CellContainer,
     pieces: readonly Piece[],
     target: Mark
-  ): HyperRobotState {
+  ): IHyperRobotState {
     return new HyperRobotState(
       "STA_THINKING",
       playerIds.map(toPlayer),
@@ -58,9 +59,9 @@ export class HyperRobotState implements CellContainer {
   }
 
   /**
-   * 一部の状態を上書きした新しい`HyperRobotState`を生成します
+   * 一部の状態を上書きした新しい`IHyperRobotState`を生成します
    */
-  private with(args: WithArgs): HyperRobotState {
+  private with(args: WithArgs): IHyperRobotState {
     return new HyperRobotState(
       args.state ?? this.state,
       args.players ?? this.players,
@@ -160,7 +161,7 @@ export class HyperRobotState implements CellContainer {
     return goal.x === point.x && goal.y === point.y;
   }
 
-  public MAN_UPD(args: ManipulateType): HyperRobotState {
+  public MAN_UPD(args: ManipulateType): IHyperRobotState {
     let newState = this.with({});
     this.MANIPUlATE_(args).forEach(update => {
       newState = newState.UPDATE_(update);
@@ -258,9 +259,9 @@ export class HyperRobotState implements CellContainer {
    *
    * チケット?は検証済みなので、100%信頼する
    * @param args 状態を変更するための情報
-   * @returns 新しい`HyperRobotState`
+   * @returns 新しい`IHyperRobotState`
    */
-  public UPDATE_(args: UpdateType): HyperRobotState {
+  public UPDATE_(args: UpdateType): IHyperRobotState {
     const res = this.UPDATE_ANY(args);
     if (res != null) return res;
 
@@ -273,7 +274,7 @@ export class HyperRobotState implements CellContainer {
   }
 
   /** 状態に関係なく処理する操作 */
-  private UPDATE_ANY({ type, data }: UpdateType): HyperRobotState | undefined {
+  private UPDATE_ANY({ type, data }: UpdateType): IHyperRobotState | undefined {
     if (type === "UPD_JOIN") {
       const players = [...this.players, toPlayer(data.playerId)];
       return this.with({ players });
@@ -281,7 +282,7 @@ export class HyperRobotState implements CellContainer {
 
     return undefined;
   }
-  private UPDATE_Thinking({ type, data }: UpdateType): HyperRobotState {
+  private UPDATE_Thinking({ type, data }: UpdateType): IHyperRobotState {
     if (type === "UPD_DECLARE") {
       const players = this.players.slice(0);
       const moverIndex = players.findIndex(player => player.id === data.playerId)!;
@@ -310,7 +311,7 @@ export class HyperRobotState implements CellContainer {
     }
     return this;
   }
-  private UPDATE_Answer({ type, data }: UpdateType): HyperRobotState {
+  private UPDATE_Answer({ type, data }: UpdateType): IHyperRobotState {
     if (type === "UPD_MOVE_PIECE") {
       const pieces = this.pieces.slice(0);
       const idx = pieces.findIndex(p => p.color === data.color);
@@ -365,7 +366,7 @@ export class HyperRobotState implements CellContainer {
     }
     return this;
   }
-  private UPDATE_Wait({ type, data }: UpdateType): HyperRobotState {
+  private UPDATE_Wait({ type, data }: UpdateType): IHyperRobotState {
     if (type === "UPD_TRANSITION_THINKING") {
       return this.with({
         state: "STA_THINKING",

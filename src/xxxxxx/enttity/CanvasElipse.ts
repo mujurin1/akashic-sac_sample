@@ -1,4 +1,3 @@
-import { Point } from "../../hyperRobot/type";
 import { CanvasEntity } from "./CanvasEntity";
 
 export class CanvasElipse extends CanvasEntity {
@@ -16,8 +15,8 @@ export class CanvasElipse extends CanvasEntity {
       this.width / 2,
       this.height / 2,
       0, // 傾き
-      0, // 楕円が始まる角度？？？
-      2 * Math.PI
+      0, // 楕円が始まる角度
+      2 * Math.PI // 楕円が終わる角度
     );
     ctx.fill();
   }

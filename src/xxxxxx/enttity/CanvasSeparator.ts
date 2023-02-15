@@ -4,6 +4,12 @@ import { CanvasEntity } from "./CanvasEntity";
 export class CanvasSeparator extends CanvasEntity {
   gap: number = 0;
 
+  override(entity: this): this {
+    this.gap = entity.gap;
+
+    return super.override(entity);
+  }
+
   /**
    * キャンバスボックスに合うように自身を整形する
    * @param canvasBox

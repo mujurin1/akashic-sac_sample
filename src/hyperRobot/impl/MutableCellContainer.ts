@@ -1,6 +1,7 @@
 import { Dir, Point } from "../type";
 import { Cell } from "../model/Cell";
 import { Mark } from "../model/Mark";
+import { CellContainer } from "./CellContainer";
 
 type MarkedCell = { x: number; y: number; mark: Mark };
 type WallCell = { x: number; y: number; dir: Dir };
@@ -129,6 +130,18 @@ export class MutableCellContainer {
     }
 
     return true;
+  }
+
+  toImmutable(width: number, height: number): CellContainer {
+    const cells: Cell[] = [];
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        cells.push(this.getCell(x, y));
+      }
+    }
+
+    return new CellContainer(cells);
   }
 }
 
